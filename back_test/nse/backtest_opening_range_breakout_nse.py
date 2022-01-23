@@ -9,7 +9,20 @@ import openpyxl
 import pandas as pd
 from pathlib import Path
 
+
+
+
 class TestSSTStrategy(bt.Strategy):
+
+    def calculated_dyn_per_away(self,number_of_buy):
+        if number_of_buy == 1 :
+            return 20
+        elif number_of_buy == 2 :
+            return 30
+        elif number_of_buy == 3:
+            return 40
+        else :
+            return 40
 
     def log(self, txt, dt=None):
         ''' Logging function for this strategy'''
@@ -41,8 +54,11 @@ class TestSSTStrategy(bt.Strategy):
                 #self.log('Previous order exists and current avg buy price is %.2f' % self.buy_avg)
                 #Start New tracking iff iff the current price is less then 15% of average buying price
                 per_dif = (self.buy_avg - (self.datahigh[0] + self.datalow[0])/2)/self.buy_avg * 100
-                if per_dif >=20:
-                    self.log('Started Tracking the coin as it previous buying avg is less than 20 per %.2f' % self.datalow[0])
+                dyn_per_away_to_be_considered = self.calculated_dyn_per_away(number_of_buy=len(self.buy_orders))
+                self.log('Required Dynamic Percentage away calculated is  %.2f' % dyn_per_away_to_be_considered)
+                self.log('Actual Percentage away calculated is  %.2f' % per_dif)
+                if per_dif >=dyn_per_away_to_be_considered:
+                    self.log(f'Started Tracking the coin as it previous buying avg is less than {dyn_per_away_to_be_considered} per %.2f' % self.datalow[0])
 
                     # Update the GTT price as 20 DH
                     self.gtt_price = self.the_highest_high_20
@@ -133,7 +149,7 @@ if __name__ == '__main__':
 
     # Iterating all the rows in sst.xlsx
     for i in range(1, row):
-        get_historical_data(sh1.cell(i + 1, 1).value,3000)
+        #get_historical_data(sh1.cell(i + 1, 1).value,1000)
         cerebro = bt.Cerebro()
         #Updating the default cash with broker
         cerebro.broker.setcash(10000.0)

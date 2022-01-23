@@ -41,8 +41,8 @@ class TestSSTStrategy(bt.Strategy):
                 #self.log('Previous order exists and current avg buy price is %.2f' % self.buy_avg)
                 #Start New tracking iff iff the current price is less then 15% of average buying price
                 per_dif = (self.buy_avg - (self.datahigh[0] + self.datalow[0])/2)/self.buy_avg * 100
-                if per_dif >=15:
-                    self.log('Started Tracking the coin as it previous buying avg is less than 15 per %.2f' % self.datalow[0])
+                if per_dif >=20:
+                    self.log('Started Tracking the coin as it previous buying avg is less than 20 per %.2f' % self.datalow[0])
 
                     # Update the GTT price as 20 DH
                     self.gtt_price = self.the_highest_high_20
@@ -56,7 +56,8 @@ class TestSSTStrategy(bt.Strategy):
 
         #Place a buy order if todays high is greater than gtt_price and if the position is being tracked in Tracking sheet
         if self.started_tracking and self.datahigh[0] >=self.gtt_price and self.gtt_price != 0.0:
-            self.buy_price = self.gtt_price + self.gtt_price* 0.01
+            self.buy_price = self.gtt_price + (self.gtt_price* 0.001)
+            #self.buy_price = self.gtt_price
             self.log('New Buy Created, %.2f' % self.buy_price)
             #self.target_price = self.buy_price + self.buy_price*self.take_profit
             self.buy(size=1)
@@ -132,7 +133,7 @@ if __name__ == '__main__':
 
     # Iterating all the rows in sst.xlsx
     for i in range(1, row):
-        get_historical_data(sh1.cell(i + 1, 1).value,1000)
+        get_historical_data(sh1.cell(i + 1, 1).value,3000)
         cerebro = bt.Cerebro()
         #Updating the default cash with broker
         cerebro.broker.setcash(10000.0)
@@ -140,7 +141,9 @@ if __name__ == '__main__':
         # Create a Data Feed
         data = bt.feeds.GenericCSVData(
             dataname='nse.csv',
-            dtformat=('%d-%m-%Y'),
+            dtformat=('%b/%d/%Y'),
+            #dtformat=('%YYYY-%mm-%dd'),
+            datetime= 15,
             timestamp = 0,
             high = 5,
             low = 6,

@@ -149,7 +149,7 @@ if __name__ == '__main__':
 
     # Iterating all the rows in sst.xlsx
     for i in range(1, row):
-        #get_historical_data(sh1.cell(i + 1, 1).value,1000)
+        get_historical_data(sh1.cell(i + 1, 1).value,1000)
         cerebro = bt.Cerebro()
         #Updating the default cash with broker
         cerebro.broker.setcash(10000.0)

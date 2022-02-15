@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 .idea*
+kite_automation_config.py

@@ -50,7 +50,7 @@ with open(holdings_file) as file :
 os.remove(holdings_file)
 #driver.close()
 #4. Delete rows in Tracking sheet where we already have positions
-wb = openpyxl.load_workbook(WORKBOOK_FOR_SST)
+#wb = openpyxl.load_workbook(WORKBOOK_FOR_SST)
 sh2 = wb[WORKBOOK_TRACKING_SHEET]
 # Loop to delete rows in Tracking sheet
 row2 = sh2.max_row
